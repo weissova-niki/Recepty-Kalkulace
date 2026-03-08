@@ -16,8 +16,17 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:var(--bg); font-family:'Jost',sans-serif; color:var(--dark); }
+body.vareni {
+  --bg: #f2f7f4;
+  --dark: #1c2e25;
+  --rose: #3d7a55;
+  --sand: #c8ddd1;
+  --light: #e4f0ea;
+  --green: #2a5e3f;
+}
 header { background:var(--dark); padding:3rem 2rem 2.5rem; text-align:center; position:relative; overflow:hidden; }
-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 50%,rgba(184,92,80,.2) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(90,122,90,.15) 0%,transparent 60%); }
+header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 50%,rgba(184,92,80,.2) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(90,122,90,.15) 0%,transparent 60%); pointer-events:none; }
+body.vareni header::before { background:radial-gradient(ellipse at 30% 50%,rgba(61,122,85,.25) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(44,94,63,.2) 0%,transparent 60%); }
 header h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,5vw,3.5rem); color:#faf6f1; position:relative; letter-spacing:.03em; }
 header p { color:var(--sand); margin-top:.4rem; font-size:.95rem; font-weight:300; position:relative; }
 .divider { width:50px; height:2px; background:var(--rose); margin:.9rem auto 0; }
@@ -30,9 +39,9 @@ main { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 3rem; }
 .card-num { font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--rose); font-weight:500; margin-bottom:.35rem; }
 .card-title { font-family:'Cormorant Garamond',serif; font-size:1.45rem; color:#faf6f1; line-height:1.3; }
 .card-note { font-size:.72rem; color:var(--sand); margin-top:.25rem; opacity:.7; }
-.cost-badge { position:absolute; top:1.2rem; right:1.2rem; background:var(--rose); color:white; font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600; padding:.3rem .65rem; border-radius:20px; }
-.delete-recipe-btn { position:absolute; top:8px; right:8px; background:none; border:none; cursor:pointer; font-size:14px; opacity:.4; color:#fff; padding:2px 4px; border-radius:4px; line-height:1; transition:opacity .2s,color .2s; }
-.delete-recipe-btn:hover { opacity:1; color:#ff6b6b; }
+.cost-badge { position:absolute; top:.5rem; right:3.2rem; background:var(--rose); color:white; font-family:'Jost',sans-serif; font-size:.8rem; font-weight:400; padding:.2rem .6rem; border-radius:20px; letter-spacing:.02em; }
+.delete-recipe-btn { position:absolute; top:8px; right:8px; background:rgba(0,0,0,.6); border:none; cursor:pointer; font-size:15px; color:#fff; padding:3px 7px; border-radius:6px; line-height:1; transition:background .2s; }
+.delete-recipe-btn:hover { background:rgba(200,50,40,.9); }
 /* Verified checkbox */
 .verified-row { display:flex; align-items:center; gap:.5rem; margin-top:.7rem; }
 .verified-row input[type=checkbox] { width:14px; height:14px; cursor:pointer; accent-color:#5a9a5a; flex-shrink:0; }
@@ -119,6 +128,10 @@ main { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 3rem; }
 .cost-box.gifted .cb-label { color:#3a6a9a; }
 .cost-box.gifted .cb-val { color:#3a6a9a; }
 footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-size:.78rem; }
+.mode-tabs { display:flex; gap:.5rem; justify-content:center; margin-top:.9rem; position:relative; z-index:1; }
+.mode-tab { background:none; border:1px solid rgba(232,217,200,.3); border-radius:50px; color:rgba(232,217,200,.5); font-family:'Jost',sans-serif; font-size:.8rem; padding:.3rem 1.1rem; cursor:pointer; transition:all .2s; }
+.mode-tab:hover { border-color:rgba(232,217,200,.7); color:rgba(232,217,200,.85); }
+.mode-tab.active { background:rgba(232,217,200,.15); border-color:rgba(232,217,200,.8); color:#faf6f1; font-weight:500; }
 .search-wrap { max-width:480px; margin:1.8rem auto 0; position:relative; }
 .search-wrap input { width:100%; padding:.75rem 1.1rem .75rem 2.8rem; border-radius:50px; border:none; font-family:'Jost',sans-serif; font-size:.95rem; color:var(--dark); background:rgba(255,255,255,.12); backdrop-filter:blur(4px); outline:none; }
 .search-wrap input::placeholder { color:rgba(250,246,241,.5); }
@@ -150,10 +163,43 @@ footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-si
 #login-error { font-size:.8rem; margin-top:.7rem; }
 /* Save indicator */
 #save-status { position:absolute; top:1rem; right:1.2rem; font-size:.72rem; font-weight:400; color:rgba(232,217,200,.5); font-family:'Jost',sans-serif; transition:opacity .3s; }
-#import-btn { position:absolute; top:.72rem; right:14rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
+#import-btn { position:absolute; top:.72rem; right:20rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
 #import-btn:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
-#export-btn { position:absolute; top:.72rem; right:7.5rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
+#export-btn { position:absolute; top:.72rem; right:13.5rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
 #export-btn:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
+#standalone-calc-btn { position:absolute; top:.72rem; right:7rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
+#standalone-calc-btn:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
+#standalone-calc-overlay { position:fixed; inset:0; background:rgba(44,31,20,.55); display:flex; align-items:center; justify-content:center; z-index:9999; }
+#standalone-calc-overlay.hidden { display:none; }
+#standalone-calc-box { background:white; border-radius:18px; padding:2rem 2rem; box-shadow:0 8px 40px rgba(44,31,20,.2); max-width:580px; width:96%; max-height:85vh; overflow-y:auto; }
+#standalone-calc-box h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--dark); margin-bottom:.3rem; }
+#standalone-calc-box .sc-subtitle { color:#999; font-size:.84rem; margin-bottom:1.2rem; }
+#sc-rows { margin-bottom:.4rem; }
+.sc-header-row { display:grid; grid-template-columns:1fr 55px 38px 60px auto 22px; gap:.28rem; margin-bottom:.3rem; padding-bottom:.3rem; border-bottom:1px solid var(--sand); }
+.sc-header-row span { font-size:.65rem; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:#bbb; }
+.sc-row { display:grid; grid-template-columns:1fr 55px 38px 60px auto 22px; gap:.28rem; align-items:center; margin-bottom:.32rem; font-size:.78rem; }
+.sc-row input.sc-name { font-size:.78rem; padding:.22rem .4rem; border:1px solid var(--sand); border-radius:5px; font-family:'Jost',sans-serif; color:var(--dark); width:100%; }
+.sc-row input.sc-name:focus { outline:none; border-color:var(--rose); }
+.sc-row input.sc-qty { padding:.2rem .28rem; border:1px solid #ddd; border-radius:5px; font-size:.72rem; text-align:right; font-family:'Jost',sans-serif; color:var(--dark); background:#fdfaf7; width:100%; }
+.sc-row input.sc-qty:focus { outline:none; border-color:var(--rose); }
+.sc-row button.sc-unit { background:none; border:1px solid #ddd; border-radius:8px; font-size:.62rem; font-family:'Jost',sans-serif; color:#aaa; cursor:pointer; padding:.1rem .28rem; transition:all .2s; white-space:nowrap; width:100%; }
+.sc-row button.sc-unit:hover { border-color:var(--rose); color:var(--rose); }
+.sc-row input.sc-price { width:100%; padding:.2rem .28rem; border:1px solid var(--sand); border-radius:5px; font-size:.78rem; text-align:right; font-family:'Jost',sans-serif; color:var(--dark); }
+.sc-row input.sc-price:focus { outline:none; border-color:var(--rose); }
+.sc-row .sc-res { text-align:right; font-weight:500; font-size:.77rem; color:var(--dark); white-space:nowrap; }
+.sc-row button.sc-del { color:#ddd; font-size:.82rem; cursor:pointer; text-align:center; line-height:1; border:none; background:none; padding:0; transition:color .15s; }
+.sc-row button.sc-del:hover { color:var(--rose); }
+#sc-add-row-btn { display:flex; align-items:center; gap:.4rem; background:none; border:1px dashed var(--sand); border-radius:8px; color:#aaa; font-family:'Jost',sans-serif; font-size:.8rem; cursor:pointer; padding:.4rem .9rem; width:100%; margin:.5rem 0; transition:all .2s; box-sizing:border-box; }
+#sc-add-row-btn:hover { border-color:var(--rose); color:var(--rose); }
+#sc-total-box { background:var(--light); border-radius:8px; padding:.55rem .85rem; margin-top:.55rem; display:flex; justify-content:space-between; align-items:center; }
+#sc-total-box .lbl { font-size:.78rem; color:var(--dark); }
+#sc-total-box .sum { font-family:'Jost',sans-serif; font-size:1.1rem; color:var(--rose); font-weight:700; letter-spacing:.02em; }
+.sc-actions { display:flex; gap:.7rem; margin-top:1.1rem; justify-content:flex-end; }
+.sc-actions button { padding:.55rem 1.3rem; border:none; border-radius:50px; font-family:'Jost',sans-serif; font-size:.88rem; cursor:pointer; transition:background .2s; }
+.sc-actions button.sc-close-btn { background:var(--sand); color:var(--dark); }
+.sc-actions button.sc-close-btn:hover { background:#ddd0c0; }
+.sc-actions button.sc-clear-btn { background:none; border:1px solid var(--sand); color:#aaa; }
+.sc-actions button.sc-clear-btn:hover { border-color:var(--rose); color:var(--rose); }
 #import-overlay { position:fixed; inset:0; background:rgba(44,31,20,.55); display:flex; align-items:center; justify-content:center; z-index:9999; }
 #import-overlay.hidden { display:none; }
 #import-box { background:white; border-radius:18px; padding:2.5rem 2.2rem; box-shadow:0 8px 40px rgba(44,31,20,.2); max-width:480px; width:92%; }
@@ -192,12 +238,36 @@ footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-si
     </div>
   </div>
 </div>
+<div id="standalone-calc-overlay" class="hidden">
+  <div id="standalone-calc-box">
+    <h2>🧮 Kalkulace</h2>
+    <p class="sc-subtitle">Prázdná kalkulační tabulka — vyplňte si sami</p>
+    <div class="sc-header-row">
+      <span>Surovina</span><span style="text-align:right">Množ.</span><span>Jedn.</span><span style="text-align:right">Kč/j.</span><span style="text-align:right">Cena</span><span></span>
+    </div>
+    <div id="sc-rows"></div>
+    <button id="sc-add-row-btn" onclick="scAddRow()">+ Přidat řádek</button>
+    <div id="sc-total-box">
+      <div class="lbl">Celkem</div>
+      <div class="sum" id="sc-total">0,00 Kč</div>
+    </div>
+    <div class="sc-actions">
+      <button class="sc-clear-btn" onclick="scClearAll()">Vymazat vše</button>
+      <button class="sc-close-btn" onclick="closeStandaloneCalc()">Zavřít</button>
+    </div>
+  </div>
+</div>
 <header>
-  <h1>🎂 Pečení – recepty a kalkulace</h1>
+  <h1>🎂 Pečení – recepty a kalkulace DEV</h1>
   <p id="recipe-count"></p>
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-peceni" onclick="switchMode('peceni')">🎂 Pečení</button>
+    <button class="mode-tab" id="tab-vareni" onclick="switchMode('vareni')">🍳 Vaření</button>
+  </div>
   <span id="save-status"></span>
   <button id="import-btn" onclick="openImportModal()">Nový Recept</button>
   <button id="export-btn" onclick="exportData()">Záloha</button>
+  <button id="standalone-calc-btn" onclick="openStandaloneCalc()">Kalkulace</button>
   <div class="divider"></div>
   <div class="search-wrap">
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
@@ -207,7 +277,7 @@ footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-si
 <main><div class="grid" id="grid"></div><div class="no-results" id="noResults">🔍 Žádný recept nenalezen</div></main>
 <footer>Pečení – recepty a kalkulace · Nikola</footer>
 <script>
-let recipes = []; let appData = {}; let saveTimeout = null;
+let recipes = []; let appData = {}; let saveTimeout = null; let currentMode = 'peceni';
 
 function calcIngCost(ing) {
   return ing.price * ing.amt;
@@ -289,7 +359,7 @@ function buildCard(r, i) {
 
   const safeTitle = r.title.replace(/'/g, "\\'");
 
-  return `<div class="card" style="animation-delay:${i*0.04}s">
+  return `<div class="card" data-idx="${i}" style="animation-delay:${i*0.04}s">
     <div class="card-thumb">
       <div class="card-num">Recept č. ${i+1}</div>
       <div class="card-title">${r.title}</div>
@@ -299,7 +369,7 @@ function buildCard(r, i) {
         <input type="checkbox" id="ver-${i}" onchange="toggleVerified(${i},'${safeTitle}')">
         <label for="ver-${i}">✓ Ověřený recept</label>
       </div>
-      <button class="delete-recipe-btn" onclick="deleteRecipe(${i})" title="Smazat recept">🗑</button>
+      <button class="delete-recipe-btn" onclick="deleteRecipe(${i})" title="Smazat recept">×</button>
     </div>
     <div class="photo-area">
       <div id="photo-wrap-${i}"></div>
@@ -330,15 +400,20 @@ function buildCard(r, i) {
 
 function updateRecipeCount() {
   const el = document.getElementById('recipe-count');
-  if (el) el.textContent = appData.recipes.length + ' receptů s předvyplněnými cenami';
+  if (el) {
+    const count = recipes.filter(r => (r.mode || 'peceni') === currentMode).length;
+    el.textContent = count + ' receptů s předvyplněnými cenami';
+  }
 }
 
 function renderGrid() {
+  const filtered = recipes.filter(r => (r.mode || 'peceni') === currentMode);
   const grid = document.getElementById('grid');
-  grid.innerHTML = recipes.map((r, i) => buildCard(r, i)).join('');
+  grid.innerHTML = filtered.map(r => buildCard(r, recipes.indexOf(r))).join('');
   updateRecipeCount();
 
-  recipes.forEach((r, i) => {
+  filtered.forEach(r => {
+    const i = recipes.indexOf(r);
     // Verified
     if (r.verified) {
       const cb = document.getElementById('ver-' + i);
@@ -859,7 +934,8 @@ function filterRecipes() {
   const q = document.getElementById('searchInput').value.toLowerCase().trim();
   const cards = document.querySelectorAll('.card');
   let visible = 0;
-  cards.forEach((card, i) => {
+  cards.forEach(card => {
+    const i = parseInt(card.dataset.idx);
     const title = recipes[i].title.toLowerCase();
     const match = title.includes(q);
     card.style.display = match ? '' : 'none';
@@ -929,6 +1005,7 @@ function doImport() {
     errEl.style.display = ''; return;
   }
 
+  recipe.mode = currentMode;
   appData.recipes.push(recipe);
   closeImportModal();
   renderGrid();
@@ -989,6 +1066,7 @@ async function loadData(token) {
     if (res.status === 401) { showLoginOverlay(); return; }
     appData = await res.json();
     recipes = appData.recipes;
+    recipes.forEach(r => { if (!r.mode) r.mode = 'peceni'; });
     migrateUserState();
     renderGrid();
   } catch(e) {
@@ -1006,6 +1084,104 @@ function scheduleAutosave() {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(saveData, 2000);
 }
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('tab-peceni').classList.toggle('active', mode === 'peceni');
+  document.getElementById('tab-vareni').classList.toggle('active', mode === 'vareni');
+  document.body.classList.toggle('vareni', mode === 'vareni');
+  document.querySelector('header h1').textContent =
+    mode === 'peceni' ? '🎂 Pečení – recepty a kalkulace DEV' : '🍳 Vaření – recepty a kalkulace DEV';
+  document.getElementById('searchInput').value = '';
+  renderGrid();
+}
+
+// ── Standalone Kalkulace ──────────────────────────────────────────
+let scRowCounter = 0;
+const SC_UNITS = ['kg', 'ks', 'l', 'g', 'ml'];
+
+function openStandaloneCalc() {
+  document.getElementById('standalone-calc-overlay').classList.remove('hidden');
+  if (document.getElementById('sc-rows').children.length === 0) {
+    for (let i = 0; i < 5; i++) scAddRow();
+  }
+}
+
+function closeStandaloneCalc() {
+  document.getElementById('standalone-calc-overlay').classList.add('hidden');
+}
+
+function scAddRow() {
+  const id = ++scRowCounter;
+  const row = document.createElement('div');
+  row.className = 'sc-row';
+  row.id = 'sc-row-' + id;
+  row.innerHTML =
+    '<input class="sc-name" placeholder="Surovina…" oninput="scRecalc()">' +
+    '<input class="sc-qty" type="text" inputmode="decimal" placeholder="0" oninput="scRecalc()">' +
+    '<button class="sc-unit" onclick="scCycleUnit(this)" data-ui="0">kg</button>' +
+    '<input class="sc-price" type="text" inputmode="decimal" placeholder="0" oninput="scRecalc()">' +
+    '<span class="sc-res">—</span>' +
+    '<button class="sc-del" onclick="scDelRow(' + id + ')" title="Smazat">×</button>';
+  document.getElementById('sc-rows').appendChild(row);
+  scRecalc();
+}
+
+function scCycleUnit(btn) {
+  let ui = parseInt(btn.dataset.ui || '0');
+  ui = (ui + 1) % SC_UNITS.length;
+  btn.dataset.ui = ui;
+  btn.textContent = SC_UNITS[ui];
+}
+
+function scDelRow(id) {
+  const el = document.getElementById('sc-row-' + id);
+  if (el) el.remove();
+  scRecalc();
+}
+
+function scRecalc() {
+  let total = 0;
+  document.querySelectorAll('#sc-rows .sc-row').forEach(function(row) {
+    const qty = parseFloat(row.querySelector('.sc-qty').value.replace(',', '.')) || 0;
+    const price = parseFloat(row.querySelector('.sc-price').value.replace(',', '.')) || 0;
+    const cost = qty * price;
+    total += cost;
+    row.querySelector('.sc-res').textContent = cost > 0 ? cost.toFixed(2) + ' Kč' : '—';
+  });
+  document.getElementById('sc-total').textContent = total.toFixed(2).replace('.', ',') + ' Kč';
+}
+
+function scClearAll() {
+  document.getElementById('sc-rows').innerHTML = '';
+  scRowCounter = 0;
+  for (let i = 0; i < 5; i++) scAddRow();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('standalone-calc-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeStandaloneCalc();
+  });
+  document.getElementById('standalone-calc-box').addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    const active = document.activeElement;
+    if (!active || active.tagName !== 'INPUT') return;
+    if (!active.closest('.sc-row')) return;
+    e.preventDefault();
+    const allInputs = Array.from(document.querySelectorAll('#sc-rows .sc-row input'));
+    const idx = allInputs.indexOf(active);
+    if (idx >= 0 && idx < allInputs.length - 1) {
+      allInputs[idx + 1].focus();
+      allInputs[idx + 1].select();
+    } else {
+      scAddRow();
+      const updated = document.querySelectorAll('#sc-rows .sc-row input');
+      const first = updated[allInputs.length];
+      if (first) { first.focus(); first.select(); }
+    }
+  });
+});
+// ─────────────────────────────────────────────────────────────────
 
 function exportData() {
   const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
