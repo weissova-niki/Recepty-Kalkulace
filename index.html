@@ -27,6 +27,29 @@ body.vareni {
 header { background:var(--dark); padding:3rem 2rem 2.5rem; text-align:center; position:relative; overflow:hidden; }
 header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 50%,rgba(184,92,80,.2) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(90,122,90,.15) 0%,transparent 60%); pointer-events:none; }
 body.vareni header::before { background:radial-gradient(ellipse at 30% 50%,rgba(61,122,85,.25) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(44,94,63,.2) 0%,transparent 60%); }
+body.vareni .gifted-toggle { display:none; }
+body.vareni .cost-box.gifted { display:none !important; }
+body.vareni .cost-box.mine { display:none; }
+body.vareni .cost-box .cb-sub { display:none; }
+#portions-overlay { position:fixed; inset:0; background:rgba(44,31,20,.55); display:flex; align-items:center; justify-content:center; z-index:9999; }
+#portions-overlay.hidden { display:none; }
+#portions-box { background:white; border-radius:18px; padding:2rem; box-shadow:0 8px 40px rgba(44,31,20,.2); max-width:520px; width:96%; max-height:85vh; overflow-y:auto; }
+#portions-box h2 { font-family:'Cormorant Garamond',serif; font-size:1.7rem; color:var(--dark); margin-bottom:.2rem; }
+#portions-box .pt-sub { color:#999; font-size:.84rem; margin-bottom:1.1rem; }
+.portions-controls { display:flex; align-items:center; gap:.7rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+.portions-controls label { font-size:.8rem; color:var(--dark); }
+.portions-controls input { width:60px; padding:.3rem .5rem; border:1px solid var(--sand); border-radius:8px; font-family:'Jost',sans-serif; font-size:.9rem; text-align:center; color:var(--dark); }
+.portions-controls input:focus { outline:none; border-color:var(--rose); }
+.portions-controls .pt-arrow { font-size:1.1rem; color:#bbb; }
+.pt-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+.pt-table th { font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; color:#bbb; font-weight:500; padding:.3rem .4rem; text-align:left; border-bottom:1px solid var(--sand); }
+.pt-table th:last-child { text-align:right; }
+.pt-table td { padding:.35rem .4rem; border-bottom:1px solid #f5f0ea; color:var(--dark); }
+.pt-table td:last-child { text-align:right; font-weight:500; color:var(--rose); }
+.pt-table tr:last-child td { border-bottom:none; }
+.pt-actions { display:flex; justify-content:flex-end; margin-top:1.2rem; }
+.pt-actions button { padding:.55rem 1.3rem; border:none; border-radius:50px; font-family:'Jost',sans-serif; font-size:.88rem; cursor:pointer; background:var(--sand); color:var(--dark); }
+.pt-actions button:hover { background:#ddd0c0; }
 header h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,5vw,3.5rem); color:#faf6f1; position:relative; letter-spacing:.03em; }
 header p { color:var(--sand); margin-top:.4rem; font-size:.95rem; font-weight:300; position:relative; }
 .divider { width:50px; height:2px; background:var(--rose); margin:.9rem auto 0; }
@@ -163,12 +186,9 @@ footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-si
 #login-error { font-size:.8rem; margin-top:.7rem; }
 /* Save indicator */
 #save-status { position:absolute; top:1rem; right:1.2rem; font-size:.72rem; font-weight:400; color:rgba(232,217,200,.5); font-family:'Jost',sans-serif; transition:opacity .3s; }
-#import-btn { position:absolute; top:.72rem; right:20rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
-#import-btn:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
-#export-btn { position:absolute; top:.72rem; right:13.5rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
-#export-btn:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
-#standalone-calc-btn { position:absolute; top:.72rem; right:7rem; background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.25rem .75rem; cursor:pointer; transition:all .2s; z-index:1; }
-#standalone-calc-btn:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
+.header-actions { position:absolute; top:.72rem; right:1.2rem; display:flex; gap:.45rem; align-items:center; z-index:1; }
+.header-actions button { background:none; border:1px solid rgba(232,217,200,.35); border-radius:50px; color:rgba(232,217,200,.6); font-family:'Jost',sans-serif; font-size:.72rem; padding:.28rem .8rem; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.header-actions button:hover { border-color:rgba(232,217,200,.8); color:rgba(232,217,200,.95); }
 #standalone-calc-overlay { position:fixed; inset:0; background:rgba(44,31,20,.55); display:flex; align-items:center; justify-content:center; z-index:9999; }
 #standalone-calc-overlay.hidden { display:none; }
 #standalone-calc-box { background:white; border-radius:18px; padding:2rem 2rem; box-shadow:0 8px 40px rgba(44,31,20,.2); max-width:580px; width:96%; max-height:85vh; overflow-y:auto; }
@@ -230,11 +250,34 @@ footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-si
   <div id="import-box">
     <h2>Import receptu</h2>
     <p>Vlož JSON receptu od Clauda</p>
+    <p id="import-mode-label" style="font-size:.8rem;margin-top:-.5rem;margin-bottom:.8rem;"></p>
     <textarea id="import-json" placeholder='{ "title": "Název", "ingredients": [ ... ] }'></textarea>
     <div id="import-error"></div>
     <div class="import-actions">
       <button onclick="closeImportModal()">Zrušit</button>
       <button onclick="doImport()">Přidat recept</button>
+    </div>
+  </div>
+</div>
+<div id="portions-overlay" class="hidden">
+  <div id="portions-box">
+    <h2 id="pt-title">Propočet osob</h2>
+    <p class="pt-sub" id="pt-sub"></p>
+    <div class="portions-controls">
+      <label>Recept je pro</label>
+      <input type="number" id="pt-base" value="4" min="1" oninput="ptRecalc()">
+      <label id="pt-base-lbl">osob</label>
+      <span class="pt-arrow">→</span>
+      <label>Chci pro</label>
+      <input type="number" id="pt-target" value="4" min="1" oninput="ptRecalc()">
+      <label id="pt-target-lbl">osob</label>
+    </div>
+    <table class="pt-table">
+      <thead><tr><th>Surovina</th><th>Původně</th><th>Nové množství</th></tr></thead>
+      <tbody id="pt-tbody"></tbody>
+    </table>
+    <div class="pt-actions">
+      <button onclick="closePortions()">Zavřít</button>
     </div>
   </div>
 </div>
@@ -265,9 +308,11 @@ footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-si
     <button class="mode-tab" id="tab-vareni" onclick="switchMode('vareni')">🍳 Vaření</button>
   </div>
   <span id="save-status"></span>
-  <button id="import-btn" onclick="openImportModal()">Nový Recept</button>
-  <button id="export-btn" onclick="exportData()">Záloha</button>
-  <button id="standalone-calc-btn" onclick="openStandaloneCalc()">Kalkulace</button>
+  <div class="header-actions">
+    <button id="import-btn" onclick="openImportModal()">Nový Recept</button>
+    <button id="standalone-calc-btn" onclick="openStandaloneCalc()">Kalkulace</button>
+    <button id="export-btn" onclick="exportData()">Záloha</button>
+  </div>
   <div class="divider"></div>
   <div class="search-wrap">
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
@@ -283,7 +328,9 @@ function calcIngCost(ing) {
   return ing.price * ing.amt;
 }
 
-function buildCard(r, i) {
+function buildCard(r, i, animIdx, displayNum) {
+  if (animIdx === undefined) animIdx = i;
+  if (displayNum === undefined) displayNum = i + 1;
   const total = r.ingredients.reduce((s, ing) => s + calcIngCost(ing), 0);
   const totalWithWork = total + r.work;
   const hasIngredients = r.ingredients.length > 0;
@@ -356,12 +403,13 @@ function buildCard(r, i) {
     Recept</a>` : '';
 
   const calcBtn = hasIngredients ? `<button class="btn btn-outline" onclick="toggleCalc(${i})"><span id="clbl-${i}">🧮 Kalkulačka</span></button>` : '';
+  const portionsBtn = (currentMode === 'vareni' && hasIngredients) ? `<button class="btn btn-outline" onclick="openPortions(${i})">🍽 Porce</button>` : '';
 
   const safeTitle = r.title.replace(/'/g, "\\'");
 
-  return `<div class="card" data-idx="${i}" style="animation-delay:${i*0.04}s">
+  return `<div class="card" data-idx="${i}" style="animation-delay:${animIdx*0.04}s">
     <div class="card-thumb">
-      <div class="card-num">Recept č. ${i+1}</div>
+      <div class="card-num">Recept č. ${displayNum}</div>
       <div class="card-title">${r.title}</div>
       ${portionsNote ? `<div class="card-note">${portionsNote}</div>` : ''}
       ${hasIngredients ? `<div class="cost-badge" id="badge-${i}">${myCost.toFixed(0)} Kč</div>` : ''}
@@ -391,6 +439,7 @@ function buildCard(r, i) {
       <div class="card-buttons">
         ${linkBtn}
         ${calcBtn}
+        ${portionsBtn}
         <button class="btn btn-outline" id="note-btn-${i}" onclick="toggleNote(${i})">📝 Poznámka</button>
         <button class="btn btn-outline${(r.postupCustom || r.postup) ? ' has-postup' : ''}" id="postup-btn-${i}" onclick="togglePostup(${i})">📋 Postup</button>
       </div>
@@ -408,12 +457,13 @@ function updateRecipeCount() {
 
 function renderGrid() {
   const filtered = recipes.filter(r => (r.mode || 'peceni') === currentMode);
+  const idxMap = new Map(recipes.map((r, i) => [r, i]));
   const grid = document.getElementById('grid');
-  grid.innerHTML = filtered.map(r => buildCard(r, recipes.indexOf(r))).join('');
+  grid.innerHTML = filtered.map((r, fi) => buildCard(r, idxMap.get(r), fi, fi + 1)).join('');
   updateRecipeCount();
 
   filtered.forEach(r => {
-    const i = recipes.indexOf(r);
+    const i = idxMap.get(r);
     // Verified
     if (r.verified) {
       const cb = document.getElementById('ver-' + i);
@@ -965,6 +1015,14 @@ function hideLoginOverlay() {
 function openImportModal() {
   document.getElementById('import-json').value = '';
   document.getElementById('import-error').style.display = 'none';
+  const lbl = document.getElementById('import-mode-label');
+  if (currentMode === 'vareni') {
+    lbl.textContent = '🍳 Recept bude přidán do Vaření';
+    lbl.style.color = '#3d7a55';
+  } else {
+    lbl.textContent = '🎂 Recept bude přidán do Pečení';
+    lbl.style.color = '#b85c50';
+  }
   document.getElementById('import-overlay').classList.remove('hidden');
   setTimeout(() => document.getElementById('import-json').focus(), 50);
 }
@@ -1089,12 +1147,65 @@ function switchMode(mode) {
   currentMode = mode;
   document.getElementById('tab-peceni').classList.toggle('active', mode === 'peceni');
   document.getElementById('tab-vareni').classList.toggle('active', mode === 'vareni');
-  document.body.classList.toggle('vareni', mode === 'vareni');
   document.querySelector('header h1').textContent =
     mode === 'peceni' ? '🎂 Pečení – recepty a kalkulace DEV' : '🍳 Vaření – recepty a kalkulace DEV';
   document.getElementById('searchInput').value = '';
   renderGrid();
+  document.body.classList.toggle('vareni', mode === 'vareni');
 }
+
+// ── Propočet osob ───────────────────────────────────────────────
+let ptRecipeIdx = null;
+
+function openPortions(i) {
+  ptRecipeIdx = i;
+  const r = recipes[i];
+  document.getElementById('pt-title').textContent = r.title;
+  document.getElementById('pt-sub').textContent = r.portions_note ? 'Recept: ' + r.portions_note : '';
+  const ptMatch = r.portions_note ? r.portions_note.match(/\d+/) : null;
+  const ptDefault = ptMatch ? parseInt(ptMatch[0]) : 1;
+  document.getElementById('pt-base').value = ptDefault;
+  document.getElementById('pt-target').value = ptDefault;
+  ptRecalc();
+  document.getElementById('portions-overlay').classList.remove('hidden');
+}
+
+function closePortions() {
+  document.getElementById('portions-overlay').classList.add('hidden');
+}
+
+function ptOsob(n) {
+  if (n === 1) return 'osoba';
+  if (n >= 2 && n <= 4) return 'osoby';
+  return 'osob';
+}
+
+function ptRecalc() {
+  const r = recipes[ptRecipeIdx];
+  const base = parseFloat(document.getElementById('pt-base').value) || 1;
+  const target = parseFloat(document.getElementById('pt-target').value) || 1;
+  document.getElementById('pt-base-lbl').textContent = ptOsob(base);
+  document.getElementById('pt-target-lbl').textContent = ptOsob(target);
+  const ratio = target / base;
+  const allIng = [
+    ...r.ingredients,
+    ...(r.gifted || []),
+    ...(r.extraIngredients || []).map(e => ({ name: e.name, amt: e.qty, unit: e.unit }))
+  ];
+  const fmt = n => n % 1 === 0 ? n.toFixed(0) : n.toFixed(2).replace('.', ',');
+  document.getElementById('pt-tbody').innerHTML = allIng.map(ing => {
+    const orig = ing.amt || 0;
+    const newAmt = orig * ratio;
+    return '<tr><td>' + ing.name + '</td><td>' + fmt(orig) + ' ' + ing.unit + '</td><td>' + fmt(newAmt) + ' ' + ing.unit + '</td></tr>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('portions-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closePortions();
+  });
+});
+// ─────────────────────────────────────────────────────────────────
 
 // ── Standalone Kalkulace ──────────────────────────────────────────
 let scRowCounter = 0;
