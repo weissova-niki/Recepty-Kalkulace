@@ -1,6 +1,9 @@
 # Local Netlify folder
 .env
 .netlify/
+.claude/
+.git/
 node_modules/
 deno.lock
 package-lock.json
+CLAUDE.md

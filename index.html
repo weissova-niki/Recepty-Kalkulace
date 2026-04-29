@@ -62,7 +62,9 @@ main { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 3rem; }
 .card-num { font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--rose); font-weight:500; margin-bottom:.35rem; }
 .card-title { font-family:'Cormorant Garamond',serif; font-size:1.45rem; color:#faf6f1; line-height:1.3; }
 .card-note { font-size:.72rem; color:var(--sand); margin-top:.25rem; opacity:.7; }
-.cost-badge { position:absolute; top:.5rem; right:3.2rem; background:var(--rose); color:white; font-family:'Jost',sans-serif; font-size:.8rem; font-weight:400; padding:.2rem .6rem; border-radius:20px; letter-spacing:.02em; }
+.badge-group { position:absolute; top:.5rem; right:3.2rem; display:flex; gap:.35rem; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+.cost-badge { background:var(--rose); color:white; font-family:'Jost',sans-serif; font-size:.8rem; font-weight:400; padding:.2rem .6rem; border-radius:20px; letter-spacing:.02em; }
+.kcal-badge { background:#e8920a; color:white; font-family:'Jost',sans-serif; font-size:.75rem; font-weight:400; padding:.2rem .6rem; border-radius:20px; letter-spacing:.02em; }
 .delete-recipe-btn { position:absolute; top:8px; right:8px; background:rgba(0,0,0,.6); border:none; cursor:pointer; font-size:15px; color:#fff; padding:3px 7px; border-radius:6px; line-height:1; transition:background .2s; }
 .delete-recipe-btn:hover { background:rgba(200,50,40,.9); }
 /* Verified checkbox */
@@ -151,6 +153,20 @@ main { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 3rem; }
 .cost-box.gifted .cb-label { color:#3a6a9a; }
 .cost-box.gifted .cb-val { color:#3a6a9a; }
 footer { text-align:center; padding:2rem; color:var(--dark); opacity:.3; font-size:.78rem; }
+/* Kalorické hodnoty */
+.kcal-area { display:none; margin-top:.1rem; }
+.kcal-area.open { display:block; }
+.kcal-area-inner { border-top:1px solid var(--sand); padding-top:.7rem; margin-bottom:.2rem; }
+.kcal-row { display:grid; grid-template-columns:1fr 62px 52px auto; gap:.28rem; align-items:center; margin-bottom:.28rem; }
+.kcal-row .kcal-name { font-size:.75rem; color:#5a3e30; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.kcal-row .kcal-input { width:100%; padding:.2rem .28rem; border:1px solid var(--sand); border-radius:5px; font-size:.72rem; text-align:right; font-family:'Jost',sans-serif; color:var(--dark); }
+.kcal-row .kcal-input:focus { outline:none; border-color:#e8920a; }
+.kcal-row .kcal-unit { font-size:.6rem; color:#bbb; }
+.kcal-row .kcal-res { text-align:right; font-size:.72rem; font-weight:500; color:#c07030; white-space:nowrap; }
+.kcal-total-box { background:#fff8f0; border:1px solid #f0d0a0; border-radius:8px; padding:.5rem .8rem; margin-top:.45rem; display:flex; justify-content:space-between; align-items:center; }
+.kcal-total-box .kcal-lbl { font-size:.68rem; color:#999; text-transform:uppercase; letter-spacing:.08em; }
+.kcal-total-box .kcal-sum { font-family:'Cormorant Garamond',serif; font-size:1.15rem; color:#e8920a; font-weight:700; }
+.btn-outline.has-kcal { border-color:#e8920a; color:#e8920a; }
 .mode-tabs { display:flex; gap:.5rem; justify-content:center; margin-top:.9rem; position:relative; z-index:1; }
 .mode-tab { background:none; border:1px solid rgba(232,217,200,.3); border-radius:50px; color:rgba(232,217,200,.5); font-family:'Jost',sans-serif; font-size:.8rem; padding:.3rem 1.1rem; cursor:pointer; transition:all .2s; }
 .mode-tab:hover { border-color:rgba(232,217,200,.7); color:rgba(232,217,200,.85); }
@@ -398,6 +414,43 @@ function buildCard(r, i, animIdx, displayNum) {
       </div>
     </div>` : '';
 
+  const allIngForKcal = [...r.ingredients, ...(r.gifted || [])];
+  let totalKcalInit = 0;
+  allIngForKcal.forEach(ing => {
+    if (!ing.kcal) return;
+    const u = ing.unit || 'kg';
+    totalKcalInit += u === 'ks' ? ing.amt * ing.kcal : ing.amt * 10 * ing.kcal;
+  });
+
+  const kcalRowsHTML = allIngForKcal.map((ing, j) => {
+    const unit = ing.unit || 'kg';
+    const kcalUnit = unit === 'ks' ? 'kcal/ks' : 'kcal/100g';
+    const kcalVal = ing.kcal != null ? ing.kcal : '';
+    const qty = ing.amt || 0;
+    const kcalTotal = ing.kcal > 0 ? (unit === 'ks' ? qty * ing.kcal : qty * 10 * ing.kcal) : 0;
+    return `<div class="kcal-row">
+      <span class="kcal-name">${ing.name}</span>
+      <input type="text" inputmode="decimal" class="kcal-input" id="ki-${i}-${j}" value="${kcalVal}" oninput="updateKcalSection(${i})" onblur="saveKcalValue(${i},${j})" placeholder="0">
+      <span class="kcal-unit">${kcalUnit}</span>
+      <span class="kcal-res" id="ki-${i}-${j}-r">${kcalTotal > 0 ? Math.round(kcalTotal) + ' kcal' : '—'}</span>
+    </div>`;
+  }).join('');
+
+  const kcalHTML = allIngForKcal.length > 0 ? `
+    <div class="kcal-area" id="kcal-area-${i}">
+      <div class="kcal-area-inner">
+        <div class="calc-label" style="margin-bottom:.45rem">🔥 Kalorické hodnoty</div>
+        ${kcalRowsHTML}
+        <div class="kcal-total-box">
+          <div>
+            <div class="kcal-lbl">Celkem za recept</div>
+            <div class="kcal-sum" id="kcal-sum-${i}">—</div>
+          </div>
+          <div id="kcal-per-${i}" style="text-align:right"></div>
+        </div>
+      </div>
+    </div>` : '';
+
   const linkBtn = r.url ? `<a class="btn btn-dark" href="${r.url}" target="_blank" rel="noopener">
     <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
     Recept</a>` : '';
@@ -412,7 +465,10 @@ function buildCard(r, i, animIdx, displayNum) {
       <div class="card-num">Recept č. ${displayNum}</div>
       <div class="card-title">${r.title}</div>
       ${portionsNote ? `<div class="card-note">${portionsNote}</div>` : ''}
-      ${hasIngredients ? `<div class="cost-badge" id="badge-${i}">${myCost.toFixed(0)} Kč</div>` : ''}
+      <div class="badge-group">
+        ${hasIngredients ? `<div class="cost-badge" id="badge-${i}">${myCost.toFixed(0)} Kč</div>` : ''}
+        ${totalKcalInit > 0 ? `<div class="kcal-badge" id="kcal-badge-${i}">${Math.round(totalKcalInit)} kcal</div>` : `<div class="kcal-badge" id="kcal-badge-${i}" style="display:none"></div>`}
+      </div>
       <div class="verified-row" id="vrow-${i}">
         <input type="checkbox" id="ver-${i}" onchange="toggleVerified(${i},'${safeTitle}')">
         <label for="ver-${i}">✓ Ověřený recept</label>
@@ -430,6 +486,7 @@ function buildCard(r, i, animIdx, displayNum) {
     </div>
     <div class="card-body">
       ${calcHTML}
+      ${kcalHTML}
       <div class="note-area" id="note-area-${i}">
         <textarea class="note-ta" id="note-ta-${i}" placeholder="Poznámky k receptu…" oninput="saveNote(${i})"></textarea>
       </div>
@@ -440,6 +497,7 @@ function buildCard(r, i, animIdx, displayNum) {
         ${linkBtn}
         ${calcBtn}
         ${portionsBtn}
+        ${allIngForKcal.length > 0 ? `<button class="btn btn-outline" id="kcal-btn-${i}" onclick="toggleKcalArea(${i})">🔥 Kalorie</button>` : ''}
         <button class="btn btn-outline" id="note-btn-${i}" onclick="toggleNote(${i})">📝 Poznámka</button>
         <button class="btn btn-outline${(r.postupCustom || r.postup) ? ' has-postup' : ''}" id="postup-btn-${i}" onclick="togglePostup(${i})">📋 Postup</button>
       </div>
@@ -499,6 +557,12 @@ function renderGrid() {
       const giftSum = document.getElementById('gift-sum-' + i);
       if (giftBox) giftBox.style.display = 'block';
       if (giftSum) giftSum.textContent = giftedCostInit.toFixed(0) + ' Kč';
+    }
+    // Kcal button highlight
+    const hasKcalData = [...r.ingredients, ...(r.gifted || [])].some(ing => ing.kcal > 0);
+    if (hasKcalData) {
+      const kcalBtn = document.getElementById('kcal-btn-' + i);
+      if (kcalBtn) kcalBtn.classList.add('has-kcal');
     }
     // Extra ingredients
     const extras = r.extraIngredients;
@@ -779,6 +843,10 @@ function updateCalcExtra(i) {
   if (totSum) totSum.textContent = total.toFixed(0) + ' Kč';
   if (totPer) totPer.textContent = `+ ${r.work} Kč práce = ${(total+r.work).toFixed(0)} Kč`;
 
+  // Sync kcal section if open
+  const kcalArea = document.getElementById('kcal-area-' + i);
+  if (kcalArea && kcalArea.classList.contains('open')) updateKcalSection(i);
+
   // Gifted box — zobraz jen když jsou darované suroviny s nenulovou cenou
   const giftBox = document.getElementById('gift-box-' + i);
   const giftSum = document.getElementById('gift-sum-' + i);
@@ -978,6 +1046,68 @@ function savePostup(i) {
     if (btn) btn.classList.remove('has-postup');
   }
   scheduleAutosave();
+}
+
+function toggleKcalArea(i) {
+  const area = document.getElementById('kcal-area-' + i);
+  const btn = document.getElementById('kcal-btn-' + i);
+  if (!area) return;
+  area.classList.toggle('open');
+  const isOpen = area.classList.contains('open');
+  if (btn) btn.classList.toggle('has-kcal', isOpen);
+  if (isOpen) updateKcalSection(i);
+}
+
+function saveKcalValue(i, j) {
+  const el = document.getElementById('ki-' + i + '-' + j);
+  if (!el) return;
+  const val = parseFloat(el.value.replace(',', '.')) || 0;
+  const allIng = [...recipes[i].ingredients, ...(recipes[i].gifted || [])];
+  if (allIng[j]) {
+    if (val > 0) allIng[j].kcal = val;
+    else delete allIng[j].kcal;
+  }
+  scheduleAutosave();
+}
+
+function updateKcalSection(i) {
+  const r = recipes[i];
+  const allIng = [...r.ingredients, ...(r.gifted || [])];
+  let totalKcal = 0;
+
+  allIng.forEach((ing, j) => {
+    const calcId = 'ci-' + i + '-' + j;
+    const qtyEl = document.getElementById(calcId + '-qty');
+    const unitEl = document.getElementById(calcId + '-unit');
+    const kcalEl = document.getElementById('ki-' + i + '-' + j);
+    const resEl = document.getElementById('ki-' + i + '-' + j + '-r');
+
+    const qty = qtyEl ? (parseFloat(qtyEl.value.replace(',', '.')) || 0) : (ing.amt || 0);
+    const unit = unitEl ? unitEl.textContent.trim() : (ing.unit || 'kg');
+    const kcal = kcalEl ? (parseFloat(kcalEl.value.replace(',', '.')) || 0) : (ing.kcal || 0);
+    const rowKcal = unit === 'ks' ? qty * kcal : qty * 10 * kcal;
+    if (resEl) resEl.textContent = kcal > 0 ? Math.round(rowKcal) + ' kcal' : '—';
+    totalKcal += rowKcal;
+  });
+
+  const sumEl = document.getElementById('kcal-sum-' + i);
+  if (sumEl) sumEl.textContent = totalKcal > 0 ? Math.round(totalKcal) + ' kcal' : '—';
+
+  const kcalBadgeEl = document.getElementById('kcal-badge-' + i);
+  if (kcalBadgeEl) {
+    if (totalKcal > 0) { kcalBadgeEl.textContent = Math.round(totalKcal) + ' kcal'; kcalBadgeEl.removeAttribute('style'); }
+    else { kcalBadgeEl.textContent = ''; kcalBadgeEl.style.display = 'none'; }
+  }
+
+  const perEl = document.getElementById('kcal-per-' + i);
+  if (perEl) {
+    const portions = r.portions ? parseFloat(r.portions) : 0;
+    if (portions > 0 && totalKcal > 0) {
+      perEl.innerHTML = `<div class="kcal-lbl">Na porci</div><div class="kcal-sum" style="font-size:1rem">${Math.round(totalKcal / portions)} kcal</div>`;
+    } else {
+      perEl.innerHTML = '';
+    }
+  }
 }
 
 function filterRecipes() {
